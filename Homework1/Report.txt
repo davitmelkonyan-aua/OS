@@ -1,0 +1,21 @@
+GitHub Link: 
+
+Assignment 1: Basics of Pointers
+
+I declared an integer variable and a pointer to it, then used dereferencing to access its value through the pointer. I also modified the integer's value using the pointer.
+
+Assignment 2: Pointer Arithmetic
+
+I declared an integer array and used a pointer with pointer arithmetic to traverse and access its elements. I modified each element through the pointer and then printed the resulting array using both the pointer and the array name.
+
+Assignment 3: Pointers and Functions
+
+I created a swap() function that accepts pointers to two integers and swaps their values using dereferencing. In main(), I passed the addresses of two variables to the function and printed their values before and after the swap.
+
+Assignment 4: Pointers to Pointers
+
+I declared an integer, a pointer to it, and a double pointer pointing to the first pointer. I used both levels of dereferencing to access and print the original integer's value.
+
+Assignment 5: Strings and Character Pointers
+
+I declared a character array containing "Hello" and used a character pointer to traverse and print the string without using array indexing. I also used pointer arithmetic to count the number of characters before the null terminator.
