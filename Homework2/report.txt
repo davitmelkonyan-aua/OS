@@ -1,0 +1,175 @@
+Link to the GitHub repository: https://github.com/davitmelkonyan-aua/OS
+
+Exercise 0 — Multiple Fork Calls
+
+Source Code:
+
+int main() {
+
+    printf("Process ID: %ld, Parent Process ID: %ld \n", (intmax_t)getpid(), (intmax_t)getppid());
+
+    pid_t a = fork();
+ 
+    printf("After 1 fork: Process ID: %ld, Parent Process ID: %ld \n", (intmax_t)getpid(), (intmax_t)getppid());
+
+    pid_t b = fork();
+
+    printf("After 2 fork: Process ID: %ld, Parent Process ID: %ld \n", (intmax_t)getpid(), (intmax_t)getppid());
+ 
+    pid_t c = fork();
+
+    printf("After 3 fork: Process ID: %ld, Parent Process ID: %ld \n", (intmax_t)getpid(), (intmax_t)getppid());
+ 
+
+    if (a > 0) {
+        printf("There are 8 processes, as the original process creates a child process, then both processes create a child each, and finally all 4 processes create a child each.");
+    }
+
+    return 0; 
+}
+
+
+Explanation: 
+
+The program starts with one process and calls `fork()` three times. After the first `fork()`, there are 2 processes. Both of these processes execute the second `fork()`, producing 4 processes. Finally, all 4 processes execute the third `fork()`, producing 8 processes in total.
+
+The `getpid()` call returns the process ID of the current process, while `getppid()` returns the process ID of its parent. The return value of `fork()` is positive in the parent process, zero in the child process, and `-1` if the call fails.
+
+The process hierarchy therefore contains 1 original process, 3 levels of `fork()` calls, and 7 newly created child processes. The `printf()` statements allow the process IDs and parent process IDs to be observed.
+
+Exercise 1 — Simple Fork and Exec
+
+Source Code:
+
+int main() {
+
+    printf("The parent process starts \n");
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        execl("/usr/bin/ls", "ls", NULL);
+    } else if (pid < 0) {
+        perror("The forking failed \n");
+    } else {
+        wait(NULL);
+        printf("Parent process done \n");
+    }
+
+    return 0;
+}
+
+Explanation:
+
+The program first calls `fork()`, creating a child process. If `fork()` returns `0`, the child calls `execl()` to execute `/usr/bin/ls`. After a successful `execl()`, the child process is replaced by the `ls` program, which lists the contents of the current directory.
+
+The parent process receives the child's PID as the return value of `fork()`. It calls `wait(NULL)` and therefore waits for the child to finish before printing `"Parent process done"`.
+
+If `fork()` fails, it returns `-1` and the program prints an error message.
+
+Exercise 2 — Multiple Forks and Execs
+
+Source Code:
+
+
+int main() {
+
+    printf("The parent process starts \n");
+
+    pid_t pid1 = fork();
+
+    if (pid1 < 0) {
+        perror("The forking failed \n");
+    } else if (pid1 == 0) {
+        execl("/usr/bin/ls", "ls", NULL);
+    } 
+    
+    wait(NULL);
+
+    pid_t pid2 = fork();
+
+    if (pid2 < 0) {
+        perror("The forking failed \n");
+    } else if (pid2 == 0) {
+        execl("/usr/bin/date", "date", NULL);
+    }
+        
+    wait(NULL);  
+    printf("Parent process done \n");
+
+    return 0;
+}
+
+Explanation:
+
+The first `fork()` creates a child process. The child executes `/usr/bin/ls` using `execl()`, replacing its program with `ls`. The parent waits for this child to finish using `wait(NULL)`.
+
+After the first child has finished, the parent creates a second child using another `fork()`. The second child executes `/usr/bin/date` using `execl()`, which replaces it with the `date` program.
+
+The parent then waits for the second child to finish and prints `"Parent process done"`.
+
+Therefore, the two child processes execute `ls` and `date` separately, while the parent waits for each child before continuing.
+
+Exercise 3 — Fork and Exec with Arguments
+
+Source Code:
+
+int main() {
+
+    printf("The parent process starts \n");
+
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        perror("Fork error");
+    } else if (pid == 0) {
+        execl("/usr/bin/echo", "echo", "Hello from the child process", NULL);
+    }
+
+    wait(NULL);
+
+    printf("The parent process ends \n");
+}
+
+
+Explanation:
+
+The program uses `fork()` to create a child process. The child calls `execl()` to execute `/usr/bin/echo`.
+
+The arguments passed to `execl()` are `"echo"` and `"Hello from the child process"`. The first string becomes `argv[0]`, while the second string becomes an argument passed to the `echo` program. Therefore, `echo` prints `"Hello from the child process"`.
+
+The parent calls `wait(NULL)` to wait for the child to finish and then prints `"The parent process ends"`.
+
+Exercise 4 — Fork and Exec with Command-Line Arguments:
+
+Source Code:
+
+int main() {
+
+    printf("The parent process starts \n");
+
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        perror("Forking error");
+    } else if (pid == 0) {
+        execl("/usr/bin/grep", "grep", "main", "text.txt", NULL);
+    } 
+
+    wait(NULL);
+
+    printf("The parent process completed \n");
+
+    return 0;
+}
+
+
+Explanation:
+
+The program creates a child process using `fork()`. The child then calls `execl()` to execute `/usr/bin/grep`.
+
+The arguments passed to `grep` are `"main"` and `"text.txt"`. The `grep` program therefore searches `text.txt` for lines containing the word `"main"` and prints the matching lines.
+
+The parent process calls `wait(NULL)` and waits for the child to finish before printing `"The parent process completed"`.
+
+The `fork()` return value is used to distinguish between the parent (`pid > 0`), the child (`pid == 0`), and a failed `fork()` (`pid < 0`).

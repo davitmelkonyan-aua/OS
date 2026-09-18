@@ -1,0 +1,9 @@
+This is the first line of the file to be printed     main
+This line will be ignored
+This line will be ignored
+This line will be ignored
+This is the second line of the file to be printed    main
+This line will be ignored
+This line will be ignored
+This is the third line of the file to be printed     main
+This line will be ignored
