@@ -1,0 +1,154 @@
+Link to the GitHub repository: https://github.com/davitmelkonyan-aua/OS
+
+Exercise 1 — Basic Process Creation with fork()
+
+Source Code:
+int main() {
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        printf("The pid of child process is: %d \n", getpid());
+        exit(0);
+    } else {
+        printf("The pid of parent process is: %d \n", getpid());
+    }
+
+    return 0;
+}
+
+Explanation:
+The program calls fork() to create a new child process. The return value pid is used to differentiate between the execution paths. 
+If pid equals zero, it indicates the child process, which prints its process ID using getpid() and then terminates via exit(0). 
+If pid is greater than zero, it indicates the parent process, which prints its own process ID.
+
+
+Exercise 2 — Using wait() and waitpid()
+
+Source Code:
+int main() {
+    pid_t pid1 = fork();
+    int status1;
+
+    if (pid1 == 0) {
+        printf("The pid of first child process is: %d \n", getpid());
+        exit(0);
+    }
+    
+    wait(&status1);
+    printf("The pid of parent process is: %d \n", getpid());
+
+    pid_t pid2 = fork();
+    int status2;
+
+    if (pid2 == 0) {
+        printf("The pid of second child process is: %d \n", getpid());
+        exit(0);
+    }
+
+    waitpid(pid2, &status2, 0);
+
+    printf("The status codes of child process are: %d, %d \n", status1, status2);
+
+    return 0;
+}
+
+Explanation:
+This program demonstrates process synchronization using both wait() and waitpid(). The first fork() creates a child that prints its PID and exits, 
+while the parent blocks using wait(&status1) until this first child completes. After resuming, the parent creates a second child via a second fork(). 
+The parent then calls waitpid(pid2, &status2, 0) to specifically wait for the second child process to finish before printing the status codes of both child processes.
+
+
+
+Exercise 3 — Understanding atexit()
+
+Source Code:
+void exitFunction1() {
+    printf("Some exit functionality \n");
+}
+
+void exitFunction2() {
+    printf("Some more exit functionality \n");
+}
+
+int main() {  
+    atexit(exitFunction2);
+    atexit(exitFunction1);
+
+    printf("Doing some work \n");
+
+    exit(0);
+}
+
+Explanation:
+The program registers two cleanup functions using atexit() before terminating with exit(0). Functions registered with atexit() follow the Last-In, First-Out principle,
+meaning exitFunction1 runs before exitFunction2 because it was registered last. Both functions must be registered prior to calling exit() to be invoked successfully. 
+In real-world applications, atexit() is useful for performing cleanups automatically upon program termination, such as closing open file descriptors, 
+releasing dynamically allocated resources, flushing output buffers, or removing temporary lock files.
+
+
+
+Exercise 4 — Fork and Exit Status
+
+Source Code:
+int main() {  
+    pid_t pid1 = fork();
+    int status1;
+
+    if (pid1 == 0) {
+        printf("Child process 1 \n");
+        exit(0);
+    }
+
+    waitpid(pid1, &status1, 0);
+
+    pid_t pid2 = fork();
+    int status2;
+
+    if (pid2 == 0) {
+        printf("Child process 2 \n");
+        exit(1);
+    }
+
+    waitpid(pid2, &status2, 0);
+
+    if (WIFEXITED(status1)) {
+        printf("Child 1 exited normally \n");
+    } else {
+        printf("Child 1 exited with an error \n");
+    }
+
+    if (WIFEXITED(status2)) {
+        printf("Child 2 exited normally \n");
+    } else {
+        printf("Child 2 exited with an error \n");
+    }
+
+    return 0;
+}
+
+Explanation:
+The program creates two separate child processes sequentially, waiting for each to finish using waitpid(). The first child exits normally with exit(0), 
+while the second child exits with an error status code via exit(1). The parent uses the WIFEXITED() macro to inspect the exit status codes stored in status1 and 
+status2, allowing it to determine and print whether each child terminated normally.
+
+
+Exercise 5 — Handling Zombie Processes
+
+Source Code:
+int main() {  
+    pid_t pid1 = fork();
+
+    if (pid1 == 0) {
+        sleep(6);
+        printf("Child process 1 \n");
+        exit(0);
+    }
+
+    wait(NULL);
+}
+
+Explanation:
+The program creates a child process that sleeps for 6 seconds before printing and exiting. Meanwhile, the parent process calls wait(NULL), 
+which blocks execution until the child process terminates. When a child process terminates, its entry in the process table remains until the parent reads its 
+exit status, temporarily creating a zombie process. Functions like wait() and waitpid() prevent zombie processes by reading the child's exit status and instructing 
+the operating system to clean up and remove the child's process table entry entirely.
