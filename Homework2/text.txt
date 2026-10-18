@@ -7,3 +7,8 @@ This line will be ignored
 This line will be ignored
 This is the third line of the file to be printed     main
 This line will be ignored
+
+Preprocessing: gcc -E main.c -o main.i
+Compilation (to assembly): gcc -S main.c -o main.s
+Assembling (to object file): gcc -c main.c -o main.o
+Linking (to executable): gcc main.c -o main

@@ -1,0 +1,27 @@
+Assignment 1:
+
+All 4 variables have addresses with leading parts identical up until the last 4 spaces. The addresses are in hexadecimal
+and if we convert their last 4 digits/chars into decimal, for all 4 the numbers are divisible by their type size.
+For instance, 35cc in hexadecimal is 13772 in decimal and 13772 mod 4 = 0 (13772 / 4 = 3443), which means int a 
+is alligned in accordance with its type. The same goes for other type variables and their according sizes.
+
+Assignment 2:
+
+The padding in the struct are applied as follows. Since char taeks 1 byte, int takes 4 bytes and double takes 8 bytes,
+in the first struct char comes first taking 1 byte, however 3 bytes of padding are added next for the coming int to be
+alligned at an address divisible by 4 (the byte size of int), and next comes the double which takes 8 bytes and will be alligned.
+This means the struct takes overall 16 bytes, with the padding added, ensuring our fields are alligned and if we make an array of 
+structs we shall have everything alligned.
+
+When changing the order of fields in the second struct, the output shows 16 byte size for the struct again, meaning the order
+did not change the size. This is because, we have a double of 8 bytes, next an int of 4 bytes which are alligned, and a char of 1 byte taking
+13 bytes in total. However 3 bytes of padding are added in order to make sure that if another similar struct was added at the
+next pointer it would be alligned as well, and if we had an array of structs all of them and their fields would be alligned.
+
+Assignment 3:
+
+Without the #pragma pack() directive we are getting a usual setup like in assigment 2. But when adding #pragma pcak() we
+can specify the maximal allignment up to certain amount of bytes. In the first example it is 1, which means that the distance
+beteen 2 data fields is at most 1 byte, and so no padding was added and the size of the struct is 13 bytes.
+In the second example the distance is 2 bytes, so 1 byte of padding was added between char and int, making the struct 14 bytes.
+And in the last example of 4 byte maximal allignment, there are 3 bytes of padding between char and int.

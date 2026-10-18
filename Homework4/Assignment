@@ -1,0 +1,52 @@
+Write a simple multi-file C Program:
+
+1. Create three files:
+main.c: Contains the main function and a call to the square function from math_utls.
+math_utils.c: Implements a utility function that returns the square of an integer.
+math_utils.h: The header file with the function declaration for the utility function.
+
+
+
+
+2. Compile the program separately:
+
+Compile the program into object files first (without linking).
+gcc -c main.c
+gcc -c math_utils.c
+Link the object files into an executable.
+gcc main.o math_utils.o -o square_prog
+
+
+3. Use nm to examine the Object and Executable Files:
+Use nm on both object files (main.o and math_utils.o) to list the symbols defined and referenced in them.
+nm main.o
+nm math_utils.o
+Use nm on the executable (square_prog) to see the final list of symbols.
+nm square_prog
+
+
+4. Use objdump to view Assembly code:
+Use objdump to disassemble the object files and the executable.
+objdump -d main.o
+objdump -d math_utils.o
+objdump -d square_prog
+Analyze the assembly output and describe the differences between the object files and the final executable.
+
+
+5. Use readelf to examine the ELF structure:
+Use readelf to explore the ELF headers of the object files and the executable.
+readelf -h main.o
+readelf -h math_utils.o
+readelf -h square_prog
+Inspect the section headers using the -S option in readelf and describe the different sections present.
+readelf -S main.o
+readelf -S math_utils.o
+readelf -S square_prog
+
+
+6. Compare the outputs:
+Compare the outputs of nm, objdump, and readelf across the object files and the final executable.
+Write a report summarizing your findings, including:
+What symbols are defined in each file?
+How the sections of the object files differ from the final executable?
+The role of the linking process in combining the object files.
