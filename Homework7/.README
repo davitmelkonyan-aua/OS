@@ -1,3 +1,6 @@
+GITHUB Link:  https://github.com/davitmelkonyan-aua/OS
+
+---------------------------------------------------
 To start the program, run ./exercise.
 
 First, enter the number of processes. Then, for each process, enter its arrival time and burst time when prompted. The program will display the Gantt chart, process information, and average waiting time, turnaround time, and response time for both FCFS and SJF algorithms.
