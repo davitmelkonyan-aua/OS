@@ -1,0 +1,7 @@
+To start the program, run ./exercise.
+
+First, enter the number of processes. Then, for each process, enter its arrival time and burst time when prompted. The program will display the Gantt chart, process information, and average waiting time, turnaround time, and response time for both FCFS and SJF algorithms.
+
+The program first reads the process information and assigns each process a PID. For FCFS, it sorts the processes by arrival time and executes them in that order. For SJF, it selects the process with the shortest burst time among the processes that have already arrived. If two processes have the same burst time, it selects the one that arrived earlier.
+
+After executing each algorithm, the program calculates the waiting time, turnaround time, and response time for every process. Finally, it displays the Gantt chart, the process information, and the average values for each algorithm.
